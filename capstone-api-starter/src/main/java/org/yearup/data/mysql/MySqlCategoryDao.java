@@ -43,7 +43,7 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao
     @Override
     public Category getById(int categoryId)
     {
-        String query = "SELECT * FROM category WHERE category_id = ?";
+        String query = "SELECT * FROM categories WHERE category_id = ?";
 
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query))
@@ -69,7 +69,7 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao
     @Override
     public Category create(Category category)
     {
-        String query = "INSERT INTO category(name, description) VALUES (?, ?)";
+        String query = "INSERT INTO categories(name, description) VALUES (?, ?)";
 
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS))
@@ -94,7 +94,7 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao
     @Override
     public void update(int categoryId, Category category)
     {
-        String query = "UPDATE category SET name = ?, description = ? WHERE category_id = ?";
+        String query = "UPDATE categories SET name = ?, description = ? WHERE category_id = ?";
 
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query))
@@ -114,7 +114,7 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao
     @Override
     public void delete(int categoryId)
     {
-        String query = "DELETE FROM category WHERE category_id = ?";
+        String query = "DELETE FROM categories WHERE category_id = ?";
 
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query))

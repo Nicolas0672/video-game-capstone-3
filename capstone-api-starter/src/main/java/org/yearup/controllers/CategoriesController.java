@@ -1,11 +1,13 @@
 package org.yearup.controllers;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.yearup.data.CategoryDao;
 import org.yearup.data.ProductDao;
 import org.yearup.models.Category;
 import org.yearup.models.Product;
+import org.yearup.service.CategoryService;
 
 import java.util.List;
 
@@ -18,28 +20,28 @@ import java.util.List;
 @CrossOrigin
 public class CategoriesController
 {
-    private final CategoryDao categoryDao;
+    private final CategoryService categoryService;
     private final ProductDao productDao;
 
     // create an Autowired controller to inject the categoryDao and ProductDao
 
-    public CategoriesController(CategoryDao categoryDao, ProductDao productDao) {
-        this.categoryDao = categoryDao;
+    public CategoriesController(CategoryService categoryService, ProductDao productDao) {
+        this.categoryService = categoryService;
         this.productDao = productDao;
     }
 
-    // add the appropriate annotation for a get action
+    @GetMapping
     public ResponseEntity<List<Category>> getAll()
     {
-        // find and return all categories
-        return null;
+        List<Category> categories = categoryService.getAllCategories();
+        return ResponseEntity.ok(categories);
     }
 
-    // add the appropriate annotation for a get action
-    public Category getById(@PathVariable int id)
+    @GetMapping("{id}")
+    public ResponseEntity<Category> getById(@PathVariable int id)
     {
-        // get the category by id
-        return null;
+        Category category = categoryService.getCategoryByID(id);
+        return ResponseEntity.ok(category);
     }
 
     // the url to return all products in category 1 would look like this
@@ -51,26 +53,26 @@ public class CategoriesController
         return null;
     }
 
-    // add annotation to call this method for a POST action
-    // add annotation to ensure that only an ADMIN can call this function
-    public Category addCategory(@RequestBody Category category)
+    @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Category> addCategory(@RequestBody Category category)
     {
-        // insert the category
-        return null;
+        Category category1 = categoryService.createCategory(category);
+        return ResponseEntity.ok(category1);
     }
 
-    // add annotation to call this method for a PUT (update) action - the url path must include the categoryId
-    // add annotation to ensure that only an ADMIN can call this function
+    @PutMapping("{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public void updateCategory(@PathVariable int id, @RequestBody Category category)
     {
-        // update the category by id
+        categoryService.updateCategory(id, category);
     }
 
 
-    // add annotation to call this method for a DELETE action - the url path must include the categoryId
-    // add annotation to ensure that only an ADMIN can call this function
+    @DeleteMapping("{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteCategory(@PathVariable int id)
     {
-        // delete the category by id
+        categoryService.deleteCategory(id);
     }
 }
