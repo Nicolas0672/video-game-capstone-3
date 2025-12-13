@@ -1,5 +1,6 @@
 package org.yearup.controllers;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -41,6 +42,9 @@ public class CategoriesController
     public ResponseEntity<Category> getById(@PathVariable int id)
     {
         Category category = categoryService.getCategoryByID(id);
+        if(category == null){
+            return ResponseEntity.notFound().build();
+        }
         return ResponseEntity.ok(category);
     }
 
@@ -58,21 +62,36 @@ public class CategoriesController
     public ResponseEntity<Category> addCategory(@RequestBody Category category)
     {
         Category category1 = categoryService.createCategory(category);
+        if(category1 == null){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
         return ResponseEntity.ok(category1);
     }
 
     @PutMapping("{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public void updateCategory(@PathVariable int id, @RequestBody Category category)
+    public ResponseEntity<Void> updateCategory(@PathVariable int id, @RequestBody Category category)
     {
+        Category categoryToUpdate = categoryService.getCategoryByID(id);
+        if(categoryToUpdate == null){
+            return ResponseEntity.notFound().build();
+        }
         categoryService.updateCategory(id, category);
+
+        return ResponseEntity.ok().build();
     }
 
 
     @DeleteMapping("{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public void deleteCategory(@PathVariable int id)
+    public ResponseEntity<Void> deleteCategory(@PathVariable int id)
     {
+        Category category = categoryService.getCategoryByID(id);
+        if(category == null){
+            return ResponseEntity.notFound().build();
+        }
         categoryService.deleteCategory(id);
+
+        return ResponseEntity.noContent().build();
     }
 }
