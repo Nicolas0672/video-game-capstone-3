@@ -62,8 +62,13 @@ public class ShoppingCartController
         String username = principal.getName();
         User user = userDao.getByUserName(username);
         int id = user.getId();
-        shoppingCartService.updateQuantity(id, productId, shoppingCartItem.getQuantity());
-        return ResponseEntity.ok().build();
+        try {
+            shoppingCartService.updateQuantity(id, productId, shoppingCartItem.getQuantity());
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException e){
+            return ResponseEntity.notFound().build();
+        }
+
     }
 
     @DeleteMapping

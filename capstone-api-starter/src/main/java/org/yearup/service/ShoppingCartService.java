@@ -39,10 +39,13 @@ public class ShoppingCartService {
         return shoppingCartItem;
     }
 
+    // Add exception if productId is not found, throw a 404
     public void updateQuantity(int userId, int productId, int newQuantity){
         CartRows cartRows = shoppingCartDao.getProductFromCartById(productId, userId);
         if(cartRows != null){
             shoppingCartDao.updateQuantity(userId, productId, newQuantity);
+        } else {
+            throw new RuntimeException("Object not found");
         }
     }
 

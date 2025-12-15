@@ -44,4 +44,58 @@ public class MySqlProfileDao extends MySqlDaoBase implements ProfileDao
         }
     }
 
+    @Override
+    public Profile update(Profile profile, int userId) {
+        String query = "UPDATE profiles SET first_name = ?, last_name = ?, phone = ?, email = ?, " +
+                "address = ?, city = ?, state = ?, zip = ? WHERE user_id = ?";
+
+        try (Connection connection = getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(query))
+        {
+            preparedStatement.setString(1, profile.getFirstName());
+            preparedStatement.setString(2, profile.getLastName());
+            preparedStatement.setString(3, profile.getPhone());
+            preparedStatement.setString(4, profile.getAddress());
+            preparedStatement.setString(5, profile.getCity());
+            preparedStatement.setString(6, profile.getState());
+            preparedStatement.setString(7, profile.getZip());
+            preparedStatement.setInt(8, userId);
+
+            preparedStatement.executeUpdate();
+
+            return profile;
+
+        } catch (SQLException e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public Profile findByUserId(int userId) {
+        String query = "SELECT * FROM profiles WHERE user_id = ?";
+
+        try (Connection connection = getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(query))
+        {
+            preparedStatement.setInt(1, userId);
+            try (ResultSet resultSet = preparedStatement.executeQuery()){
+                if(resultSet.next()){
+                    String firstName = resultSet.getString("first_name");
+                    String lastName = resultSet.getString("last_name");
+                    String address = resultSet.getString("address");
+                    String phone = resultSet.getString("phone");
+                    String email = resultSet.getString("email");
+                    String city = resultSet.getString("city");
+                    String state = resultSet.getString("state");
+                    String zip = resultSet.getString("zip");
+
+                    return new Profile(userId, firstName, lastName, phone, email, address, city, state, zip);
+                }
+            }
+        } catch (SQLException e){
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
+
 }
