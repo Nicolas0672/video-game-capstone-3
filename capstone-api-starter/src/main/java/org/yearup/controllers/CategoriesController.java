@@ -12,10 +12,6 @@ import org.yearup.service.CategoryService;
 
 import java.util.List;
 
-// add the annotations to make this a REST controller
-// add the annotation to make this controller the endpoint for the following url
-    // http://localhost:8080/categories
-// add annotation to allow cross site origin requests
 @RestController
 @RequestMapping("categories")
 @CrossOrigin
@@ -23,8 +19,6 @@ public class CategoriesController
 {
     private final CategoryService categoryService;
     private final ProductDao productDao;
-
-    // create an Autowired controller to inject the categoryDao and ProductDao
 
     public CategoriesController(CategoryService categoryService, ProductDao productDao) {
         this.categoryService = categoryService;

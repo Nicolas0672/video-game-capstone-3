@@ -22,7 +22,7 @@ public class ShoppingCartService {
     public ShoppingCartItem create(int userId, int productId){
 
         ShoppingCartItem shoppingCartItem = new ShoppingCartItem();
-        CartRows cartRows = shoppingCartDao.getProductById(productId, userId);
+        CartRows cartRows = shoppingCartDao.getProductFromCartById(productId, userId);
 
         if(cartRows != null){
             int newQuantity = cartRows.getQuantity() + 1;
@@ -39,7 +39,18 @@ public class ShoppingCartService {
         return shoppingCartItem;
     }
 
+    public void updateQuantity(int userId, int productId, int newQuantity){
+        CartRows cartRows = shoppingCartDao.getProductFromCartById(productId, userId);
+        if(cartRows != null){
+            shoppingCartDao.updateQuantity(userId, productId, newQuantity);
+        }
+    }
+
     public ShoppingCart getShoppingCartByUserId(int userId){
         return shoppingCartDao.getShoppingCartByUserId(userId);
+    }
+
+    public void delete(int userId){
+        shoppingCartDao.delete(userId);
     }
 }

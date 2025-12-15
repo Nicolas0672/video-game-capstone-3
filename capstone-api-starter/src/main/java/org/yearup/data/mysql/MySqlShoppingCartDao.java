@@ -69,7 +69,7 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
     }
 
     @Override
-    public CartRows getProductById(int productId, int userId) {
+    public CartRows getProductFromCartById(int productId, int userId) {
         String query = "SELECT * FROM shopping_cart WHERE product_id = ? AND user_id = ?";
 
         try (Connection connection = getConnection();
@@ -91,6 +91,22 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
             throw new RuntimeException(e);
         }
         return null;
+    }
+
+    @Override
+    public void delete(int userId) {
+        String query = "DELETE FROM shopping_cart where user_id = ?";
+
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query))
+        {
+            preparedStatement.setInt(1, userId);
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e){
+            throw new RuntimeException(e);
+        }
+
     }
 
     @Override

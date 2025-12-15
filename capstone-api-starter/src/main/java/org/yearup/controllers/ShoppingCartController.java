@@ -30,17 +30,15 @@ public class ShoppingCartController
     }
 
     @GetMapping
-    public ShoppingCart getCart(Principal principal)
+    public ResponseEntity<ShoppingCart> getCart(Principal principal)
     {
         try
         {
-            // get the currently logged in username
             String userName = principal.getName();
-            // find database user by userId
             User user = userDao.getByUserName(userName);
             int userId = user.getId();
-
-            return shoppingCartService.getShoppingCartByUserId(userId);
+            ShoppingCart shoppingCart = shoppingCartService.getShoppingCartByUserId(userId);
+            return ResponseEntity.ok(shoppingCart);
         }
         catch(Exception e)
         {
@@ -48,28 +46,34 @@ public class ShoppingCartController
         }
     }
 
-    // add a POST method to add a product to the cart - the url should be
-    // https://localhost:8080/cart/products/15 (15 is the productId to be added
-
     @PostMapping("products/{productId}")
     public ResponseEntity<ShoppingCartItem> create(@PathVariable int productId, Principal principal){
 
         String name = principal.getName();
         User user = userDao.getByUserName(name);
         int userId = user.getId();
-
         ShoppingCartItem shoppingCartItem = shoppingCartService.create(userId, productId);
-
         return ResponseEntity.ok(shoppingCartItem);
     }
 
+    @PutMapping("products/{productId}")
+    public ResponseEntity<Void> updateQuantity(@PathVariable int productId, @RequestBody ShoppingCartItem shoppingCartItem, Principal principal){
 
-    // add a PUT method to update an existing product in the cart - the url should be
-    // https://localhost:8080/cart/products/15 (15 is the productId to be updated)
-    // the BODY should be a ShoppingCartItem - quantity is the only value that will be updated
+        String username = principal.getName();
+        User user = userDao.getByUserName(username);
+        int id = user.getId();
+        shoppingCartService.updateQuantity(id, productId, shoppingCartItem.getQuantity());
+        return ResponseEntity.ok().build();
+    }
 
+    @DeleteMapping
+    public ResponseEntity<Void> delete(Principal principal){
 
-    // add a DELETE method to clear all products from the current users cart
-    // https://localhost:8080/cart
+        String name = principal.getName();
+        User user = userDao.getByUserName(name);
+        int userId = user.getId();
+        shoppingCartService.delete(userId);
+        return ResponseEntity.noContent().build();
+    }
 
 }
