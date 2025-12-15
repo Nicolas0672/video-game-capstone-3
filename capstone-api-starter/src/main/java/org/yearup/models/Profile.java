@@ -2,36 +2,37 @@ package org.yearup.models;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
 
 public class Profile
 {
-    @NotBlank(message = "userId is required")
+    @Positive(message = "userId must be greater than 0")
     private int userId;
 
-    @NotBlank(message = "first name is required")
-    private String firstName;
+    @NotBlank(message = "First name is required")
+    private String firstName = "";
 
-    @NotBlank(message = "last name is required")
-    private String lastName;
+    @NotBlank(message = "Last name is required")
+    private String lastName = "";
 
-    @NotBlank(message = "phone number is required")
-    private String phone;
+    @NotBlank(message = "phone is required")
+    private String phone = "";
 
-    @NotBlank(message = "email is required")
-    @Email(message = "email must be valid")
-    private String email;
+    @Email(message = "Email should be valid")
+    @NotBlank(message = "Email is required")
+    private String email = "";
 
-    @NotBlank(message = "address is required")
-    private String address;
+    @NotBlank(message = "Address is required")
+    private String address = "";
 
-    @NotBlank(message = "city is required")
-    private String city;
+    @NotBlank(message = "City is required")
+    private String city = "";
 
-    @NotBlank(message = "state is required")
-    private String state;
+    @NotBlank(message = "State is required")
+    private String state = "";
 
-    @NotBlank(message = "zip is required")
-    private String zip;
+    @NotBlank(message = "Zip code is invalid")
+    private String zip = "";
 
     public Profile()
     {

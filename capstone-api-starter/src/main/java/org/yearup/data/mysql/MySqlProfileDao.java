@@ -55,11 +55,12 @@ public class MySqlProfileDao extends MySqlDaoBase implements ProfileDao
             preparedStatement.setString(1, profile.getFirstName());
             preparedStatement.setString(2, profile.getLastName());
             preparedStatement.setString(3, profile.getPhone());
-            preparedStatement.setString(4, profile.getAddress());
-            preparedStatement.setString(5, profile.getCity());
-            preparedStatement.setString(6, profile.getState());
-            preparedStatement.setString(7, profile.getZip());
-            preparedStatement.setInt(8, userId);
+            preparedStatement.setString(4, profile.getEmail());
+            preparedStatement.setString(5, profile.getAddress());
+            preparedStatement.setString(6, profile.getCity());
+            preparedStatement.setString(7, profile.getState());
+            preparedStatement.setString(8, profile.getZip());
+            preparedStatement.setInt(9, userId);
 
             preparedStatement.executeUpdate();
 

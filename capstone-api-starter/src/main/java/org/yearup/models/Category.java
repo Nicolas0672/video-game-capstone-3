@@ -1,9 +1,16 @@
 package org.yearup.models;
 
+import javax.validation.constraints.NotBlank;
+
 public class Category
 {
+    @NotBlank(message = "CategoryID is required")
     private int categoryId;
+
+    @NotBlank(message = "Name is required")
     private String name;
+
+    @NotBlank(message = "Description is required")
     private String description;
 
     public Category()
