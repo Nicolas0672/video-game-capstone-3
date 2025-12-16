@@ -1,20 +1,22 @@
 package org.yearup.models;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
 
 public class Product
 {
-    @NotBlank(message = "productId is required")
+    @Positive(message = "productId needs to be positive")
     private int productId;
 
     @NotBlank(message = "Name is required")
     private String name;
 
-    @NotBlank(message = "Price is required")
+    @Positive(message = "Price needs to be positive")
     private BigDecimal price;
 
-    @NotBlank(message = "CategoryId is required")
+    @Positive(message = "CategoryId needs to be positive")
     private int categoryId;
 
     @NotBlank(message = "Description is required")
@@ -23,11 +25,11 @@ public class Product
     @NotBlank(message = "Subcategory is required")
     private String subCategory;
 
-    @NotBlank(message = "Stock is required")
+    @Positive(message = "Stock needs to be positive")
     private int stock;
 
-    @NotBlank(message = "Featured is required")
-    private boolean isFeatured;
+    @NotNull(message = "isFeatured is required")
+    private Boolean isFeatured;
 
     @NotBlank(message = "ImageUrl is required")
     private String imageUrl;

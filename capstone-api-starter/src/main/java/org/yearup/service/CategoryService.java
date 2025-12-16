@@ -2,6 +2,7 @@ package org.yearup.service;
 
 import org.springframework.stereotype.Service;
 import org.yearup.data.CategoryDao;
+import org.yearup.exception.CategoryNotFoundException;
 import org.yearup.models.Category;
 
 import java.util.List;
@@ -19,27 +20,25 @@ public class CategoryService {
     }
 
     public Category getCategoryByID(int id){
-        return categoryDao.getById(id);
+        Category category = categoryDao.getById(id);
+        if(category == null){
+            throw new CategoryNotFoundException("Category not found: " + id);
+        }
+        return category;
     }
 
     public Category createCategory(Category category){
         return categoryDao.create(category);
     }
 
-    public void updateCategory(int id, Category category){
-        Category categoryToUpdate = categoryDao.getById(id);
-        if(category.getName() != null){
-            categoryToUpdate.setName(category.getName());
-        }
-
-        if(category.getDescription() != null){
-            categoryToUpdate.setDescription(category.getDescription());
-        }
-
-        categoryDao.update(id, categoryToUpdate);
+    public Category updateCategory(int id, Category category){
+        getCategoryByID(id);
+        categoryDao.update(id, category);
+        return getCategoryByID(id);
     }
 
     public void deleteCategory(int id){
+        getCategoryByID(id);
         categoryDao.delete(id);
     }
 

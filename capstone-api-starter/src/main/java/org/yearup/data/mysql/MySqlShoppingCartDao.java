@@ -143,4 +143,5 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
 
         return new Product(productId, name, price, categoryId, description, subCategory, stock, isFeatured, imageUrl);
     }
+
 }

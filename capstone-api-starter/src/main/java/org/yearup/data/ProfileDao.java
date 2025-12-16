@@ -8,4 +8,5 @@ public interface ProfileDao
     Profile create(Profile profile);
     Profile update(Profile profile, int userId);
     Profile findByUserId(int userId);
+    boolean existsByEmail(String email);
 }

@@ -6,33 +6,15 @@ import javax.validation.constraints.Positive;
 
 public class Profile
 {
-    @Positive(message = "userId must be greater than 0")
     private int userId;
-
-    @NotBlank(message = "First name is required")
-    private String firstName = "";
-
-    @NotBlank(message = "Last name is required")
-    private String lastName = "";
-
-    @NotBlank(message = "phone is required")
-    private String phone = "";
-
-    @Email(message = "Email should be valid")
-    @NotBlank(message = "Email is required")
-    private String email = "";
-
-    @NotBlank(message = "Address is required")
-    private String address = "";
-
-    @NotBlank(message = "City is required")
-    private String city = "";
-
-    @NotBlank(message = "State is required")
-    private String state = "";
-
-    @NotBlank(message = "Zip code is invalid")
-    private String zip = "";
+    private String firstName;
+    private String lastName;
+    private String phone;
+    private String email;
+    private String address;
+    private String city;
+    private String state;
+    private String zip;
 
     public Profile()
     {

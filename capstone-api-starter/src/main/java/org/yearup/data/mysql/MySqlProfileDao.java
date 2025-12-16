@@ -6,6 +6,8 @@ import org.yearup.data.ProfileDao;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class MySqlProfileDao extends MySqlDaoBase implements ProfileDao
@@ -44,27 +46,69 @@ public class MySqlProfileDao extends MySqlDaoBase implements ProfileDao
         }
     }
 
+    // Ensure dynamic body request
     @Override
     public Profile update(Profile profile, int userId) {
-        String query = "UPDATE profiles SET first_name = ?, last_name = ?, phone = ?, email = ?, " +
-                "address = ?, city = ?, state = ?, zip = ? WHERE user_id = ?";
+        List<String> updates = new ArrayList<>();
+        List<Object> params = new ArrayList<>();
+
+        if (profile.getFirstName() != null) {
+            updates.add("first_name = ?");
+            params.add(profile.getFirstName());
+        }
+
+        if (profile.getLastName() != null) {
+            updates.add("last_name = ?");
+            params.add(profile.getLastName());
+        }
+
+        if (profile.getPhone() != null) {
+            updates.add("phone = ?");
+            params.add(profile.getPhone());
+        }
+
+        if (profile.getEmail() != null) {
+            updates.add("email = ?");
+            params.add(profile.getEmail());
+        }
+
+        if (profile.getAddress() != null) {
+            updates.add("address = ?");
+            params.add(profile.getAddress());
+        }
+
+        if (profile.getCity() != null) {
+            updates.add("city = ?");
+            params.add(profile.getCity());
+        }
+
+        if (profile.getState() != null) {
+            updates.add("state = ?");
+            params.add(profile.getState());
+        }
+
+        if (profile.getZip() != null) {
+            updates.add("zip = ?");
+            params.add(profile.getZip());
+        }
+
+        if (updates.isEmpty()) {
+            return profile;
+        }
+
+        String query = "UPDATE profiles SET " + String.join(", ", updates) + " WHERE user_id = ?";
+        params.add(userId);
 
         try (Connection connection = getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement(query))
         {
-            preparedStatement.setString(1, profile.getFirstName());
-            preparedStatement.setString(2, profile.getLastName());
-            preparedStatement.setString(3, profile.getPhone());
-            preparedStatement.setString(4, profile.getEmail());
-            preparedStatement.setString(5, profile.getAddress());
-            preparedStatement.setString(6, profile.getCity());
-            preparedStatement.setString(7, profile.getState());
-            preparedStatement.setString(8, profile.getZip());
-            preparedStatement.setInt(9, userId);
+            for(int i = 0; i < params.size(); i++){
+                preparedStatement.setObject(i + 1, params.get(i));
+            }
 
             preparedStatement.executeUpdate();
 
-            return profile;
+            return findByUserId(userId);
 
         } catch (SQLException e){
             throw new RuntimeException(e);
@@ -97,6 +141,25 @@ public class MySqlProfileDao extends MySqlDaoBase implements ProfileDao
             throw new RuntimeException(e);
         }
         return null;
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        String query = "SELECT 1 FROM profiles WHERE email = ?";
+
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query))
+        {
+            preparedStatement.setString(1, email);
+            try (ResultSet resultSet = preparedStatement.executeQuery()){
+                if(resultSet.next()){
+                    return true;
+                }
+            }
+        } catch (SQLException e){
+            throw new RuntimeException(e);
+        }
+        return false;
     }
 
 }

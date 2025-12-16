@@ -25,22 +25,24 @@ public class ProfileController {
     @GetMapping
     public ResponseEntity<Profile> findByUserId(Principal principal){
 
-        String username = principal.getName();
-        User user = userDao.getByUserName(username);
-        int userId = user.getId();
-
+        int userId = getUserId(principal);
         Profile profile = profileService.findByUserId(userId);
-        if(profile == null){
-            return ResponseEntity.notFound().build();
-        }
         return ResponseEntity.ok(profile);
     }
 
     @PutMapping
-    public ResponseEntity<Profile> update(@RequestBody @Valid Profile profile, Principal principal){
+    public ResponseEntity<Profile> update(@RequestBody Profile profile, Principal principal){
 
-        Profile updatedProfile = profileService.update(profile, profile.getUserId());
+        int userId = getUserId(principal);
+        Profile updatedProfile = profileService.update(profile, userId);
         return ResponseEntity.ok(updatedProfile);
+    }
+
+    // Helper
+    private int getUserId(Principal principal){
+        String name = principal.getName();
+        User user = userDao.getByUserName(name);
+        return user.getId();
     }
 
 }

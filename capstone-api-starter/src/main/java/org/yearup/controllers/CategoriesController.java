@@ -10,6 +10,7 @@ import org.yearup.models.Category;
 import org.yearup.models.Product;
 import org.yearup.service.CategoryService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -18,11 +19,9 @@ import java.util.List;
 public class CategoriesController
 {
     private final CategoryService categoryService;
-    private final ProductDao productDao;
 
-    public CategoriesController(CategoryService categoryService, ProductDao productDao) {
+    public CategoriesController(CategoryService categoryService) {
         this.categoryService = categoryService;
-        this.productDao = productDao;
     }
 
     @GetMapping
@@ -36,43 +35,23 @@ public class CategoriesController
     public ResponseEntity<Category> getById(@PathVariable int id)
     {
         Category category = categoryService.getCategoryByID(id);
-        if(category == null){
-            return ResponseEntity.notFound().build();
-        }
         return ResponseEntity.ok(category);
-    }
-
-    // the url to return all products in category 1 would look like this
-    // https://localhost:8080/categories/1/products
-    @GetMapping("{categoryId}/products")
-    public List<Product> getProductsById(@PathVariable int categoryId)
-    {
-        // get a list of product by categoryId
-        return null;
     }
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Category> addCategory(@RequestBody Category category)
+    public ResponseEntity<Category> addCategory(@RequestBody @Valid Category category)
     {
-        Category category1 = categoryService.createCategory(category);
-        if(category1 == null){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-        return ResponseEntity.ok(category1);
+        Category newCategory = categoryService.createCategory(category);
+        return ResponseEntity.ok(newCategory);
     }
 
     @PutMapping("{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> updateCategory(@PathVariable int id, @RequestBody Category category)
+    public ResponseEntity<Category> updateCategory(@PathVariable int id, @RequestBody @Valid Category category)
     {
-        Category categoryToUpdate = categoryService.getCategoryByID(id);
-        if(categoryToUpdate == null){
-            return ResponseEntity.notFound().build();
-        }
-        categoryService.updateCategory(id, category);
-
-        return ResponseEntity.ok().build();
+        Category updatedCategory = categoryService.updateCategory(id, category);
+        return ResponseEntity.ok(updatedCategory);
     }
 
 
@@ -80,12 +59,7 @@ public class CategoriesController
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteCategory(@PathVariable int id)
     {
-        Category category = categoryService.getCategoryByID(id);
-        if(category == null){
-            return ResponseEntity.notFound().build();
-        }
         categoryService.deleteCategory(id);
-
         return ResponseEntity.noContent().build();
     }
 }

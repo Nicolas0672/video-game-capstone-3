@@ -1,10 +1,11 @@
 package org.yearup.models;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
 
 public class Category
 {
-    @NotBlank(message = "CategoryID is required")
+    @Positive(message = "CategoryID must be positive")
     private int categoryId;
 
     @NotBlank(message = "Name is required")
