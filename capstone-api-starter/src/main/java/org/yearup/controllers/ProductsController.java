@@ -2,12 +2,15 @@ package org.yearup.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.yearup.models.Product;
 import org.yearup.data.ProductDao;
+import org.yearup.service.ProductService;
 
+import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -16,95 +19,62 @@ import java.util.List;
 @CrossOrigin
 public class ProductsController
 {
-    private ProductDao productDao;
+    private final ProductService productService;
 
     @Autowired
-    public ProductsController(ProductDao productDao)
+    public ProductsController(ProductService productService)
     {
-        this.productDao = productDao;
+        this.productService = productService;
     }
 
     @GetMapping("")
     @PreAuthorize("permitAll()")
-    public List<Product> search(@RequestParam(name="cat", required = false) Integer categoryId,
-                                @RequestParam(name="minPrice", required = false) BigDecimal minPrice,
-                                @RequestParam(name="maxPrice", required = false) BigDecimal maxPrice,
-                                @RequestParam(name="subCategory", required = false) String subCategory
+    public ResponseEntity<List<Product>> search(@RequestParam(name="cat", required = false) Integer categoryId,
+                                                @RequestParam(name="minPrice", required = false) BigDecimal minPrice,
+                                                @RequestParam(name="maxPrice", required = false) BigDecimal maxPrice,
+                                                @RequestParam(name="subCategory", required = false) String subCategory
                                 )
     {
-        try
-        {
-            return productDao.search(categoryId, minPrice, maxPrice, subCategory);
-        }
-        catch(Exception ex)
-        {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
-        }
+        List<Product> products = productService.search(categoryId, minPrice, maxPrice, subCategory);
+        return ResponseEntity.ok(products);
     }
 
     @GetMapping("{id}")
     @PreAuthorize("permitAll()")
-    public Product getById(@PathVariable int id )
+    public ResponseEntity<Product> getById(@PathVariable int id )
     {
-        try
-        {
-            var product = productDao.getById(id);
+        Product product = productService.getById(id);
+        return ResponseEntity.ok(product);
+    }
 
-            if(product == null)
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-
-            return product;
-        }
-        catch(Exception ex)
-        {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
-        }
+    @GetMapping("categories/{categoryId}")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<List<Product>> listByCategoryId(@PathVariable int categoryId){
+        List<Product> products = productService.listByCategoryId(categoryId);
+        return ResponseEntity.ok(products);
     }
 
     @PostMapping()
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public Product addProduct(@RequestBody Product product)
+    public ResponseEntity<Product> addProduct(@RequestBody @Valid Product product)
     {
-        try
-        {
-            return productDao.create(product);
-        }
-        catch(Exception ex)
-        {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
-        }
+       Product newProduct = productService.create(product);
+       return ResponseEntity.status(201).body(newProduct);
     }
 
     @PutMapping("{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public void updateProduct(@PathVariable int id, @RequestBody Product product)
+    public ResponseEntity<Product> updateProduct(@PathVariable int id, @RequestBody @Valid Product product)
     {
-        try
-        {
-            productDao.create(product);
-        }
-        catch(Exception ex)
-        {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
-        }
+        Product updatedProduct = productService.update(id, product);
+        return ResponseEntity.ok(updatedProduct);
     }
 
     @DeleteMapping("{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public void deleteProduct(@PathVariable int id)
+    public ResponseEntity<Void> deleteProduct(@PathVariable int id)
     {
-        try
-        {
-            var product = productDao.getById(id);
-
-            if(product == null)
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-
-            productDao.delete(id);
-        }
-        catch(Exception ex)
-        {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
-        }
+       productService.delete(id);
+       return ResponseEntity.noContent().build();
     }
 }

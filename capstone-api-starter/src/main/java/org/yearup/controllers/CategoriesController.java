@@ -1,76 +1,65 @@
 package org.yearup.controllers;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.yearup.data.CategoryDao;
 import org.yearup.data.ProductDao;
 import org.yearup.models.Category;
 import org.yearup.models.Product;
+import org.yearup.service.CategoryService;
 
+import javax.validation.Valid;
 import java.util.List;
 
-// add the annotations to make this a REST controller
-// add the annotation to make this controller the endpoint for the following url
-    // http://localhost:8080/categories
-// add annotation to allow cross site origin requests
 @RestController
 @RequestMapping("categories")
 @CrossOrigin
 public class CategoriesController
 {
-    private final CategoryDao categoryDao;
-    private final ProductDao productDao;
+    private final CategoryService categoryService;
 
-    // create an Autowired controller to inject the categoryDao and ProductDao
-
-    public CategoriesController(CategoryDao categoryDao, ProductDao productDao) {
-        this.categoryDao = categoryDao;
-        this.productDao = productDao;
+    public CategoriesController(CategoryService categoryService) {
+        this.categoryService = categoryService;
     }
 
-    // add the appropriate annotation for a get action
+    @GetMapping
     public ResponseEntity<List<Category>> getAll()
     {
-        // find and return all categories
-        return null;
+        List<Category> categories = categoryService.getAllCategories();
+        return ResponseEntity.ok(categories);
     }
 
-    // add the appropriate annotation for a get action
-    public Category getById(@PathVariable int id)
+    @GetMapping("{id}")
+    public ResponseEntity<Category> getById(@PathVariable int id)
     {
-        // get the category by id
-        return null;
+        Category category = categoryService.getCategoryByID(id);
+        return ResponseEntity.ok(category);
     }
 
-    // the url to return all products in category 1 would look like this
-    // https://localhost:8080/categories/1/products
-    @GetMapping("{categoryId}/products")
-    public List<Product> getProductsById(@PathVariable int categoryId)
+    @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Category> addCategory(@RequestBody @Valid Category category)
     {
-        // get a list of product by categoryId
-        return null;
+        Category newCategory = categoryService.createCategory(category);
+        return ResponseEntity.status(201).body(newCategory);
     }
 
-    // add annotation to call this method for a POST action
-    // add annotation to ensure that only an ADMIN can call this function
-    public Category addCategory(@RequestBody Category category)
+    @PutMapping("{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Category> updateCategory(@PathVariable int id, @RequestBody @Valid Category category)
     {
-        // insert the category
-        return null;
-    }
-
-    // add annotation to call this method for a PUT (update) action - the url path must include the categoryId
-    // add annotation to ensure that only an ADMIN can call this function
-    public void updateCategory(@PathVariable int id, @RequestBody Category category)
-    {
-        // update the category by id
+        Category updatedCategory = categoryService.updateCategory(id, category);
+        return ResponseEntity.ok(updatedCategory);
     }
 
 
-    // add annotation to call this method for a DELETE action - the url path must include the categoryId
-    // add annotation to ensure that only an ADMIN can call this function
-    public void deleteCategory(@PathVariable int id)
+    @DeleteMapping("{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> deleteCategory(@PathVariable int id)
     {
-        // delete the category by id
+        categoryService.deleteCategory(id);
+        return ResponseEntity.noContent().build();
     }
 }

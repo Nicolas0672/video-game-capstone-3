@@ -3,12 +3,10 @@ package org.yearup.data.mysql;
 import org.springframework.stereotype.Component;
 import org.yearup.data.CategoryDao;
 import org.yearup.models.Category;
+import org.yearup.models.Product;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +44,7 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao
     @Override
     public Category getById(int categoryId)
     {
-        String query = "SELECT * FROM category WHERE category_id = ?";
+        String query = "SELECT * FROM categories WHERE category_id = ?";
 
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query))
@@ -72,20 +70,64 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao
     @Override
     public Category create(Category category)
     {
-        // create a new category
+        String query = "INSERT INTO categories(name, description) VALUES (?, ?)";
+
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS))
+        {
+            preparedStatement.setString(1, category.getName());
+            preparedStatement.setString(2, category.getDescription());
+
+            preparedStatement.executeUpdate();
+            ResultSet resultSet = preparedStatement.getGeneratedKeys();
+            if(resultSet.next()){
+
+                int category_id = resultSet.getInt(1);
+                return new Category(category_id, category.getName(), category.getDescription());
+            }
+
+        } catch (SQLException e){
+            throw new RuntimeException(e);
+        }
         return null;
     }
 
     @Override
     public void update(int categoryId, Category category)
     {
-        // update category
+        String query = "UPDATE categories SET name = ?, description = ? WHERE category_id = ?";
+
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query))
+        {
+            preparedStatement.setString(1, category.getName());
+            preparedStatement.setString(2, category.getDescription());
+            preparedStatement.setInt(3, categoryId);
+
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e){
+            throw new RuntimeException(e);
+        }
+
     }
 
     @Override
     public void delete(int categoryId)
     {
-        // delete category
+        String query = "DELETE FROM categories WHERE category_id = ?";
+
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query))
+        {
+            preparedStatement.setInt(1, categoryId);
+
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e){
+            throw new RuntimeException(e);
+        }
+
     }
 
     private Category mapRow(ResultSet row) throws SQLException
