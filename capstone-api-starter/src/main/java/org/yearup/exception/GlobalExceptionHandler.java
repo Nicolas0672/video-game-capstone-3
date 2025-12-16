@@ -73,4 +73,11 @@ public class GlobalExceptionHandler {
         errors.put("message", "Profile not found");
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errors);
     }
+
+    @ExceptionHandler(EmptyCartException.class)
+    public ResponseEntity<Map<String, String>> handleEmptyCart(EmptyCartException ex){
+        Map<String, String> errors = new HashMap<>();
+        errors.put("message", "Cannot checkout due to empty cart");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+    }
 }

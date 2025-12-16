@@ -43,7 +43,7 @@ public class CategoriesController
     public ResponseEntity<Category> addCategory(@RequestBody @Valid Category category)
     {
         Category newCategory = categoryService.createCategory(category);
-        return ResponseEntity.ok(newCategory);
+        return ResponseEntity.status(201).body(newCategory);
     }
 
     @PutMapping("{id}")

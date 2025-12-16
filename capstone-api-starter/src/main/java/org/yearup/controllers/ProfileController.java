@@ -2,6 +2,7 @@ package org.yearup.controllers;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.yearup.data.UserDao;
 import org.yearup.models.Profile;
@@ -13,6 +14,8 @@ import java.security.Principal;
 
 @RestController
 @RequestMapping("profile")
+@PreAuthorize("hasRole('USER')")
+@CrossOrigin
 public class ProfileController {
     private final ProfileService profileService;
     private final UserDao userDao;

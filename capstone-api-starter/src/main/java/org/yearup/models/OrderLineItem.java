@@ -1,5 +1,7 @@
 package org.yearup.models;
 
+import org.springframework.stereotype.Component;
+
 import java.math.BigDecimal;
 
 public class OrderLineItem {

@@ -6,6 +6,8 @@ import org.yearup.data.mysql.MySqlOrderLineItemDao;
 import org.yearup.models.OrderLineItem;
 import org.yearup.models.ShoppingCart;
 
+import java.util.List;
+
 @Service
 public class OrderLineItemService {
     private final OrderLineItemDao orderLineItemDao;
@@ -14,7 +16,7 @@ public class OrderLineItemService {
         this.orderLineItemDao = orderLineItemDao;
     }
 
-    public OrderLineItem create(ShoppingCart shoppingCart, int orderId){
+    public List<OrderLineItem> create(ShoppingCart shoppingCart, int orderId){
         return orderLineItemDao.create(shoppingCart, orderId);
     }
 }

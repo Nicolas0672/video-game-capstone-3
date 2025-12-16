@@ -31,11 +31,11 @@ public class MySqlOrderDao extends MySqlDaoBase implements OrderDao {
             preparedStatement.setString(6, profile.getZip());
             preparedStatement.setDouble(7, shippingAmount);
 
-            try (ResultSet resultSet = preparedStatement.executeQuery()){
-                if(resultSet.next()){
-                    int id = resultSet.getInt(1);
-                    return new Order(id, profile.getUserId(), localDate, profile.getAddress(), profile.getCity(), profile.getZip(), shippingAmount);
-                }
+            preparedStatement.executeUpdate();
+            ResultSet resultSet = preparedStatement.getGeneratedKeys();
+            if(resultSet.next()){
+                int id = resultSet.getInt(1);
+                return new Order(id, profile.getUserId(), localDate, profile.getAddress(), profile.getCity(), profile.getZip(), shippingAmount);
             }
 
         } catch (SQLException e){

@@ -1,9 +1,14 @@
 package org.yearup.service;
 
 import org.springframework.stereotype.Service;
+import org.yearup.dto.CheckoutRespondDto;
+import org.yearup.exception.EmptyCartException;
 import org.yearup.exception.ShoppingCartNotFoundException;
 import org.yearup.models.Order;
+import org.yearup.models.OrderLineItem;
 import org.yearup.models.ShoppingCart;
+
+import java.util.List;
 
 @Service
 public class CheckoutService {
@@ -17,13 +22,14 @@ public class CheckoutService {
         this.shoppingCartService = shoppingCartService;
     }
 
-    public void checkout(int userId){
+    public CheckoutRespondDto checkout(int userId){
         ShoppingCart shoppingCart = shoppingCartService.getShoppingCartByUserId(userId);
-        if(shoppingCart == null){
-            throw new ShoppingCartNotFoundException("Cart not found with this userId: " + userId);
+        if(shoppingCart.getItems().isEmpty()){
+            throw new EmptyCartException("Cart is empty: " + userId);
         }
         Order order = orderService.create(userId);
-        orderLineItemService.create(shoppingCart, order.getOrderId());
+        List<OrderLineItem> orderLineItemList = orderLineItemService.create(shoppingCart, order.getOrderId());
         shoppingCartService.delete(userId);
+        return new CheckoutRespondDto(order, orderLineItemList);
     }
 }

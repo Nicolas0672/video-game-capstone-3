@@ -18,11 +18,11 @@ public class ProductService {
     }
 
     public List<Product> search(Integer categoryId, BigDecimal minPrice, BigDecimal maxPrice, String subCategory){
-        if(categoryId == null && minPrice == null && maxPrice == null && subCategory == null){
-            throw new InvalidSearchCriteraException("Need one or more search filter");
-        } else {
+//        if(categoryId == null && minPrice == null && maxPrice == null && subCategory == null){
+//            throw new InvalidSearchCriteraException("Need one or more search filter");
+//        } else {
             return productDao.search(categoryId, minPrice, maxPrice, subCategory);
-        }
+//        }
     }
 
     public List<Product> listByCategoryId(int categoryId){
