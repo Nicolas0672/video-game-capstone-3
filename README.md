@@ -138,6 +138,28 @@ You can insert a UML diagram here if desired 📊.
 - Added validation, exception handling, and role-based security.
 - Focused on clean, maintainable code while implementing realistic e-commerce workflows.
 
+## 🧪 Testing & API Documentation
+
+### Postman Tests
+I created **Postman collections** to test all endpoints of the backend, including:
+- CRUD operations for **Products**, **Profiles**, and **Categories**
+- Shopping cart operations: add, update, delete items
+- Checkout workflows
+- Error scenarios (empty cart, invalid product, duplicate emails, etc.)
+
+✅ Ensures all endpoints behave as expected and edge cases are covered.
+
+### Swagger Integration
+The project includes **Swagger UI** for API documentation:
+- Provides a live, interactive interface for testing endpoints
+- Displays models, request parameters, and response formats
+- Makes it easy for frontend developers or QA engineers to explore the API
+
+You can access Swagger at:  
+`http://localhost:8080/swagger-ui/index.html` (when running the backend locally)
+
+✅ Improves collaboration and reduces API miscommunication.
+
 
 ## 🔑 Technologies
 
