@@ -80,4 +80,11 @@ public class GlobalExceptionHandler {
         errors.put("message", "Cannot checkout due to empty cart");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
+
+    @ExceptionHandler(InvalidQuantityAmountException.class)
+    public ResponseEntity<Map<String, String>> handleEmptyCart(InvalidQuantityAmountException ex){
+        Map<String, String> errors = new HashMap<>();
+        errors.put("message", "Quantity must be positive");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+    }
 }
