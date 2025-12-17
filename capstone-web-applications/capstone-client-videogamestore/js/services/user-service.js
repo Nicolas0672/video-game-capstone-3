@@ -142,6 +142,11 @@ class UserService {
         productService.enableButtons();
     }
 
+    getToken() {
+        return this.currentUser.token;
+    }
+
+
 }
 
 document.addEventListener('DOMContentLoaded', () => {

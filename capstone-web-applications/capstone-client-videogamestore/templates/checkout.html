@@ -1,0 +1,29 @@
+<div class="checkout-container mt-4">
+    <h2>Order Confirmation</h2>
+
+    <p><strong>Order #:</strong> {{checkout.order.orderId}}</p>
+    <p><strong>Date:</strong> {{checkout.order.date}}</p>
+
+    <h3>Shipping Address</h3>
+    <p>
+        {{checkout.order.address}}<br>
+        {{checkout.order.city}}, {{checkout.order.zip}}
+    </p>
+
+    <h3>Order Items</h3>
+    <ul>
+        {{#checkout.orderLineItemList}}
+        <li>
+            Product ID: {{productId}}<br>
+            Price: ${{salesPrice}}<br>
+            Quantity: {{quantity}}
+        </li>
+        {{/checkout.orderLineItemList}}
+    </ul>
+
+    <p><strong>Shipping:</strong> ${{checkout.order.shippingAmount}}</p>
+
+    <p class="thank-you">
+        Thank you for your purchase!
+    </p>
+</div>
