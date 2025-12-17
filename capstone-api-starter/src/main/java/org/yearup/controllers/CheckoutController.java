@@ -1,5 +1,9 @@
 package org.yearup.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -17,6 +21,7 @@ import java.security.Principal;
 @RequestMapping("checkout")
 @PreAuthorize("hasRole('USER')")
 @CrossOrigin
+@Tag(name = "Checkout", description = "API for managing checkout")
 public class CheckoutController {
     private final CheckoutService checkoutService;
     private final UserDao userDao;
@@ -27,6 +32,12 @@ public class CheckoutController {
     }
 
     @PostMapping
+    @Operation(summary = "Checkout")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Checkout successfully"),
+            @ApiResponse(responseCode = "404", description = "Cart not found"),
+            @ApiResponse(responseCode = "400", description = "Checkout decline due to cart being empty")
+    })
     public ResponseEntity<CheckoutRespondDto> checkout(Principal principal){
         String username = principal.getName();
         User user = userDao.getByUserName(username);

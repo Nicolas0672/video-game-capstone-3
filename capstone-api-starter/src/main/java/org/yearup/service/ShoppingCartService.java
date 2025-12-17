@@ -3,6 +3,7 @@ package org.yearup.service;
 import org.springframework.stereotype.Service;
 import org.yearup.data.ProductDao;
 import org.yearup.data.ShoppingCartDao;
+import org.yearup.exception.InvalidQuantityAmountException;
 import org.yearup.exception.ProductNotFoundInCartException;
 import org.yearup.exception.ShoppingCartNotFoundException;
 import org.yearup.models.CartRows;
@@ -44,6 +45,9 @@ public class ShoppingCartService {
 
     // Add exception if productId is not found, throw a 404
     public void updateQuantity(int userId, int productId, int newQuantity){
+        if(newQuantity < 0){
+            throw new InvalidQuantityAmountException("Quantity must be positive: " + newQuantity);
+        }
         productService.getById(productId);
         CartRows cartRows = shoppingCartDao.getProductFromCartById(productId, userId);
         if(cartRows != null){
