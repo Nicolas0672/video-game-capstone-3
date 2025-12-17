@@ -66,15 +66,12 @@ class ShoppingCartService {
 
     }
 
-    loadCartPage()
-    {
-        // templateBuilder.build("cart", this.cart, "main");
-
+    loadCartPage() {
         const main = document.getElementById("main")
         main.innerHTML = "";
 
         let div = document.createElement("div");
-        div.classList="filter-box";
+        div.classList = "filter-box";
         main.appendChild(div);
 
         const contentDiv = document.createElement("div")
@@ -88,21 +85,29 @@ class ShoppingCartService {
         h1.innerText = "Cart";
         cartHeader.appendChild(h1);
 
-        const button = document.createElement("button");
-        button.classList.add("btn")
-        button.classList.add("btn-danger")
-        button.innerText = "Clear";
-        button.addEventListener("click", () => this.clearCart());
-        cartHeader.appendChild(button)
+        const clearButton = document.createElement("button");
+        clearButton.classList.add("btn", "btn-danger")
+        clearButton.innerText = "Clear";
+        clearButton.addEventListener("click", () => this.clearCart());
+        cartHeader.appendChild(clearButton)
 
         contentDiv.appendChild(cartHeader)
         main.appendChild(contentDiv);
 
-        // let parent = document.getElementById("cart-item-list");
+        // Render cart items
         this.cart.items.forEach(item => {
             this.buildItem(item, contentDiv)
         });
+
+        // ✅ Add checkout button dynamically
+        if (this.cart.items.length > 0) {
+            const checkoutDiv = document.createElement("div");
+            checkoutDiv.classList.add("cart-footer");
+            checkoutDiv.innerHTML = `<button id="checkoutBtn" class="btn btn-primary">Checkout</button>`;
+            contentDiv.appendChild(checkoutDiv);
+        }
     }
+
 
     buildItem(item, parent)
     {

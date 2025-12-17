@@ -122,7 +122,7 @@ if(profileDao.existsByEmail(profile.getEmail())){
 - **Models** represent entities and support validation.
 - **GlobalExceptionHandler** ensures consistent error handling.
 
-You can insert a UML diagram here if desired 📊.
+![img.png](img.png)
 
 ## 🏆 What’s Impressive
 
