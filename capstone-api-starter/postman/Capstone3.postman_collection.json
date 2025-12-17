@@ -1,0 +1,403 @@
+{
+	"info": {
+		"_postman_id": "d2202019-511c-436e-a2bc-37453d839fa2",
+		"name": "Capstone3",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "38703825"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"item": [
+				{
+					"name": "userLogin",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "adminLogin",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "userRegister",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			],
+			"description": "Login to app"
+		},
+		{
+			"name": "ShoppingCart (USER_ONLY)",
+			"item": [
+				{
+					"name": "getCart",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"description": "Get shopping cart"
+					},
+					"response": []
+				},
+				{
+					"name": "addSameProductToCart",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"description": "If products exist in the cart, quantity is incremented"
+					},
+					"response": []
+				},
+				{
+					"name": "addNewProductToCart",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"description": "Add a new product to cart"
+					},
+					"response": []
+				},
+				{
+					"name": "updateProductInCart",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"description": "Update product in cart with new quantity and returns custom response:\n\n- Product not found\n    \n- Product not found in cart\n    \n- Quantity must be positive"
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0X3VzZXIiLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxNzY2MDIwOTUyfQ.l-2b0DyQJ3KEfy3TA0Py_n6o7Lf-oTBFYZDJC_m9-hdFML2lEa1nx68I63eOuULQxQB2gdPge7dL3EChXBM0UQ",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Profile (USER_ONLY)",
+			"item": [
+				{
+					"name": "findByUserId",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "updateEmailAlreadyExists",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "updateProfile",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0X3VzZXIiLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxNzY1OTUxMzIyfQ.Oc_aqHrAhOruUpRuYgBM-J2vSEs6tiI2vRnim9v7TFuTpj9xGeFCu8jBe-cIQHTW_L_Tp7AnqgfppAIjqersbQ",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Category",
+			"item": [
+				{
+					"name": "getAll",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"description": "Get all categories"
+					},
+					"response": []
+				},
+				{
+					"name": "getById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"description": "Gets category by ID and sends a respond message if not found"
+					},
+					"response": []
+				},
+				{
+					"name": "addCategory (ADMIN_ONLY)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"description": "Adds category and sends a response if all field isn't provided(ADMIN_ONLY)"
+					},
+					"response": []
+				},
+				{
+					"name": "updateCategories (ADMIN_ONLY)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"description": "Update category and sends a response if all fields isnt provided (ADMIN_ONLY)"
+					},
+					"response": []
+				},
+				{
+					"name": "deleteCategory (ADMIN_ONLY)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"description": "Delete category and sends response if ID isn't found (ADMIN_ONLY)"
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0dXNlcjEyMyIsImF1dGgiOiJST0xFX0FETUlOIiwiZXhwIjoxNzY2MDE3ODcyfQ.JI4wv-wtJSdvCZ2D8UcVIHPEdsFhKqWGquYAiLmAdyMZag-AOL3Za1Lk5bYGhj-ZftR0icpqI2_vWA6jogOdCg",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Product",
+			"item": [
+				{
+					"name": "searchProduct",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"description": "Search product and if all field is empty, return a response indicating the error"
+					},
+					"response": []
+				},
+				{
+					"name": "getByProductId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"description": "Gets product by ID and returns a response if not found"
+					},
+					"response": []
+				},
+				{
+					"name": "listProductByCategoryId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"description": "Gets all product filtered by categoryID"
+					},
+					"response": []
+				},
+				{
+					"name": "addProduct (ADMIN_ONLY)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"description": "Creates a product and returns a error response if all field isnt provided (ADMIN_ONLY)"
+					},
+					"response": []
+				},
+				{
+					"name": "updateProduct (ADMIN_ONLY)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"description": "Updates product with Product Entity and throw error if productId not found before updating"
+					},
+					"response": []
+				},
+				{
+					"name": "deleteProducts (ADMIN_ONLY)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"description": "Delete product and if not found, throw an error"
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0dXNlcjEyMyIsImF1dGgiOiJST0xFX0FETUlOIiwiZXhwIjoxNzY2MDE3ODcyfQ.JI4wv-wtJSdvCZ2D8UcVIHPEdsFhKqWGquYAiLmAdyMZag-AOL3Za1Lk5bYGhj-ZftR0icpqI2_vWA6jogOdCg",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Checkout (USER_ONLY)",
+			"item": [
+				{
+					"name": "checkout",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"description": "Checkout the cart and if cart is empty, throw error"
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0X3VzZXIiLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxNzY2MDIwOTUyfQ.l-2b0DyQJ3KEfy3TA0Py_n6o7Lf-oTBFYZDJC_m9-hdFML2lEa1nx68I63eOuULQxQB2gdPge7dL3EChXBM0UQ",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	]
+}
