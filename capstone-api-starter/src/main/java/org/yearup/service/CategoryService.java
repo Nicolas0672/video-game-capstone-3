@@ -15,10 +15,13 @@ public class CategoryService {
         this.categoryDao = categoryDao;
     }
 
+    // Retrieve all categories
     public List<Category> getAllCategories(){
         return categoryDao.getAllCategories();
     }
 
+    // Retrieve a category by ID
+    // Throws exception if not found
     public Category getCategoryByID(int id){
         Category category = categoryDao.getById(id);
         if(category == null){
@@ -27,20 +30,27 @@ public class CategoryService {
         return category;
     }
 
+    // Create a new category
     public Category createCategory(Category category){
         return categoryDao.create(category);
     }
 
+    // Update an existing category
+    // Ensures category exists before updating
     public Category updateCategory(int id, Category category){
-        getCategoryByID(id);
+        getCategoryByID(id); // validate existence
         categoryDao.update(id, category);
-        return getCategoryByID(id);
+        return getCategoryByID(id); // return updated category
     }
 
+    // Delete a category
+    // Ensures category exists before deletion
     public void deleteCategory(int id){
-        getCategoryByID(id);
+        getCategoryByID(id); // validate existence
         categoryDao.delete(id);
     }
-
-
 }
+
+
+
+

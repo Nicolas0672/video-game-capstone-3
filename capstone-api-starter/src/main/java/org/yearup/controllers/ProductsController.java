@@ -27,8 +27,7 @@ public class ProductsController
     private final ProductService productService;
 
     @Autowired
-    public ProductsController(ProductService productService)
-    {
+    public ProductsController(ProductService productService) {
         this.productService = productService;
     }
 
@@ -52,8 +51,7 @@ public class ProductsController
             @ApiResponse(responseCode = "200", description = "Product found"),
             @ApiResponse(responseCode = "404", description = "Product not found")
     })
-    public ResponseEntity<Product> getById(@PathVariable int id )
-    {
+    public ResponseEntity<Product> getById(@PathVariable int id ) {
         Product product = productService.getById(id);
         return ResponseEntity.ok(product);
     }
@@ -69,8 +67,7 @@ public class ProductsController
     @PostMapping()
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Operation(summary = "Add product (ADMIN_ONLY)")
-    public ResponseEntity<Product> addProduct(@RequestBody @Valid Product product)
-    {
+    public ResponseEntity<Product> addProduct(@RequestBody @Valid Product product) {
        Product newProduct = productService.create(product);
        return ResponseEntity.status(201).body(newProduct);
     }
@@ -82,8 +79,7 @@ public class ProductsController
             @ApiResponse(responseCode = "200", description = "Product updated"),
             @ApiResponse(responseCode = "404", description = "Product not found to update")
     })
-    public ResponseEntity<Product> updateProduct(@PathVariable int id, @RequestBody @Valid Product product)
-    {
+    public ResponseEntity<Product> updateProduct(@PathVariable int id, @RequestBody @Valid Product product) {
         Product updatedProduct = productService.update(id, product);
         return ResponseEntity.ok(updatedProduct);
     }
@@ -95,8 +91,7 @@ public class ProductsController
             @ApiResponse(responseCode = "204", description = "Product deleted"),
             @ApiResponse(responseCode = "404", description = "Product not found to delete")
     })
-    public ResponseEntity<Void> deleteProduct(@PathVariable int id)
-    {
+    public ResponseEntity<Void> deleteProduct(@PathVariable int id) {
        productService.delete(id);
        return ResponseEntity.noContent().build();
     }

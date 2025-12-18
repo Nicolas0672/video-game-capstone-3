@@ -22,14 +22,24 @@ public class CheckoutService {
         this.shoppingCartService = shoppingCartService;
     }
 
+    // Process checkout for a user
+    // 1. Retrieve shopping cart
+    // 2. Ensure cart is not empty
+    // 3. Create order and line items
+    // 4. Clear the shopping cart
     public CheckoutRespondDto checkout(int userId){
         ShoppingCart shoppingCart = shoppingCartService.getShoppingCartByUserId(userId);
+
         if(shoppingCart.getItems().isEmpty()){
             throw new EmptyCartException("Cart is empty: " + userId);
         }
-        Order order = orderService.create(userId);
-        List<OrderLineItem> orderLineItemList = orderLineItemService.create(shoppingCart, order.getOrderId());
-        shoppingCartService.delete(userId);
+
+        Order order = orderService.create(userId); // create new order
+        List<OrderLineItem> orderLineItemList = orderLineItemService.create(shoppingCart, order.getOrderId()); // add line items
+
+        shoppingCartService.delete(userId); // clear cart after checkout
+
         return new CheckoutRespondDto(order, orderLineItemList);
     }
 }
+

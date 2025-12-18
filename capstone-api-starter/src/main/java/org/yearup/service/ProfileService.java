@@ -18,18 +18,25 @@ public class ProfileService {
         this.userDao = userDao;
     }
 
+    // Create a new profile
     public Profile create(Profile profile){
         return profileDao.create(profile);
     }
 
+    // Update an existing profile for a user
+    // Throws exception if profile not found or email already exists
     public Profile update(Profile profile, int userId){
-        findByUserId(userId);
+        findByUserId(userId); // ensure profile exists
+
         if(profileDao.existsByEmail(profile.getEmail())){
-            throw new EmailAlreadyExitsException("Email already exits " + profile.getEmail());
+            throw new EmailAlreadyExitsException("Email already exists: " + profile.getEmail());
         }
+
         return profileDao.update(profile, userId);
     }
 
+    // Retrieve profile by userId
+    // Throws exception if profile not found
     public Profile findByUserId(int userId){
         Profile profile = profileDao.findByUserId(userId);
         if(profile == null){
@@ -38,3 +45,4 @@ public class ProfileService {
         return profile;
     }
 }
+
