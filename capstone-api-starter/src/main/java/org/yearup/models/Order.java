@@ -24,6 +24,10 @@ public class Order {
         this.shippingAmount = shippingAmount;
     }
 
+    public Order() {
+
+    }
+
     public int getOrderId() {
         return orderId;
     }
