@@ -85,17 +85,25 @@ ecommerce-backend/
 The `CheckoutService` **coordinates multiple services** to perform checkout in one call:
 
 ```java
+ // Process checkout for a user
+// 1. Retrieve shopping cart
+// 2. Ensure cart is not empty
+// 3. Create order and line items
+// 4. Clear the shopping cart
 public CheckoutRespondDto checkout(int userId){
     ShoppingCart shoppingCart = shoppingCartService.getShoppingCartByUserId(userId);
+
     if(shoppingCart.getItems().isEmpty()){
         throw new EmptyCartException("Cart is empty: " + userId);
     }
-    Order order = orderService.create(userId);
-    List<OrderLineItem> orderLineItemList = orderLineItemService.create(shoppingCart, order.getOrderId());
-    shoppingCartService.delete(userId);
+
+    Order order = orderService.create(userId); // create new order
+    List<OrderLineItem> orderLineItemList = orderLineItemService.create(shoppingCart, order.getOrderId()); // add line items
+
+    shoppingCartService.delete(userId); // clear cart after checkout
+
     return new CheckoutRespondDto(order, orderLineItemList);
 }
-
 ```
 
 ## 🛠 Centralized Exception Handling
@@ -133,22 +141,6 @@ if(profileDao.existsByEmail(profile.getEmail())){
 
 ![img.png](img.png)
 
-## 🏆 What’s Impressive
-
-- End-to-End workflow: Checkout service handles multiple steps atomically.
-- Comprehensive exception handling with meaningful HTTP status codes.
-- Role-based access control for Admin/User using Spring Security annotations (@PreAuthorize).
-- Clean and modular architecture, easy to extend or maintain.
-- Integration Ready: Swagger and Postman for API exploration and testing.
-
-
-## 💻 How I Worked on This
-
-- Extended pre-built Spring Boot code to include advanced cart, checkout, and profile features.
-- Added validation, exception handling, and role-based security.
-- Refactored code to be clean, maintainable, and production-ready.
-- Focused on realistic e-commerce workflows and engineering best practices.
-
 ## 🧪 Testing & API Documentation
 
 ### Postman Tests
@@ -171,6 +163,21 @@ You can access Swagger at:
 
 ✅ Improves collaboration and reduces API miscommunication.
 
+## 🏆 What’s Impressive
+
+- End-to-End workflow: Checkout service handles multiple steps atomically.
+- Comprehensive exception handling with meaningful HTTP status codes.
+- Role-based access control for Admin/User using Spring Security annotations (@PreAuthorize).
+- Clean and modular architecture, easy to extend or maintain.
+- Integration Ready: Swagger and Postman for API exploration and testing.
+
+
+## 💻 How I Worked on This
+
+- Extended pre-built Spring Boot code to include advanced cart, checkout, and profile features.
+- Added validation, exception handling, and role-based security.
+- Refactored code to be clean, maintainable, and production-ready.
+- Focused on realistic e-commerce workflows and engineering best practices.
 
 ## 🔑 Technologies
 
