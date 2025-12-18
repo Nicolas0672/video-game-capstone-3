@@ -1,19 +1,28 @@
-# 🛒 E-Commerce Application
+# 🛒 E-Commerce Backend (E2E Capstone Project)
 
 ## 🚀 Project Overview
-This is a full-featured **e-commerce backend** built with **Spring Boot**. It supports users, profiles, shopping carts, products, categories, and checkout workflows. The project demonstrates **RESTful API design**, **exception handling**, **role-based access control**, and **service-oriented architecture**.
+This is a **full-featured, end-to-end (E2E) e-commerce backend** built with **Spring Boot**.  
+It supports users, profiles, shopping carts, products, categories, and checkout workflows.
 
-I built on top of a pre-existing Spring Boot framework, enhancing it with new features, service orchestration, and clean code practices.
+The backend demonstrates:
+- **End-to-End workflows:** from shopping cart creation → checkout → order creation → cart cleanup.
+- **RESTful API design** with proper HTTP status codes.
+- **Exception handling** and validation layers.
+- **Role-based access control** (Admin/User) using Spring Security.
+- **Service-oriented architecture**, modular and production-ready.
+
+I built on top of a pre-existing Spring Boot framework, extending it with advanced features, validation, and orchestration for realistic e-commerce scenarios.
 
 ---
 
 ## 🎯 Key Features
-- **User Profiles**: Secure CRUD operations for user profiles with validation and email uniqueness checks.
+- **User Profiles**: Secure CRUD operations, email uniqueness validation, and role-based access.
 - **Products & Categories**: Full management with search, filtering, and update/delete capabilities.
-- **Shopping Cart**: Dynamic cart management, including quantity updates and total calculation.
-- **Checkout System**: Complete checkout orchestration involving `ShoppingCartService`, `OrderService`, and `OrderLineItemService`.
-- **Role-Based Access Control**: Admin vs User permissions using Spring Security.
-- **Centralized Exception Handling**: `GlobalExceptionHandler` manages validation, not-found errors, and business rules.
+- **Shopping Cart**: Add/update/delete items, with quantity validation.
+- **Checkout System**: Orchestrates multiple services in one transaction:  
+  `ShoppingCartService → OrderService → OrderLineItemService → Cart cleanup`
+- **Centralized Exception Handling**: Handles not-found, validation, and business rule errors consistently.
+- **Integration Ready**: Swagger UI and Postman collections for testing and frontend collaboration.
 
 ---
 
@@ -126,17 +135,19 @@ if(profileDao.existsByEmail(profile.getEmail())){
 
 ## 🏆 What’s Impressive
 
-- Service orchestration with Checkout and ShoppingCart services.
+- End-to-End workflow: Checkout service handles multiple steps atomically.
 - Comprehensive exception handling with meaningful HTTP status codes.
-- Role-based access control with annotations (`@PreAuthorize`) for Admin/User.
-- Clean and modular architecture, making it easy to extend.
+- Role-based access control for Admin/User using Spring Security annotations (@PreAuthorize).
+- Clean and modular architecture, easy to extend or maintain.
+- Integration Ready: Swagger and Postman for API exploration and testing.
 
 
 ## 💻 How I Worked on This
 
 - Extended pre-built Spring Boot code to include advanced cart, checkout, and profile features.
 - Added validation, exception handling, and role-based security.
-- Focused on clean, maintainable code while implementing realistic e-commerce workflows.
+- Refactored code to be clean, maintainable, and production-ready.
+- Focused on realistic e-commerce workflows and engineering best practices.
 
 ## 🧪 Testing & API Documentation
 

@@ -10,7 +10,4 @@ import java.sql.Date;
 public interface OrderDao {
     Order create(Profile profile, Date date, double shippingAmount);
 
-    interface OrderLineItemDao {
-        OrderLineItem create(ShoppingCart shoppingCart, int orderId);
-    }
 }
