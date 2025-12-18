@@ -1,207 +1,168 @@
 let cartService;
 
 class ShoppingCartService {
+    cart = { items: [], total: 0 };
 
-    cart = {
-        items:[],
-        total:0
-    };
-
-    addToCart(productId)
-    {
-        const url = `${config.baseUrl}/cart/products/${productId}`;
-        // const headers = userService.getHeaders();
-
-        axios.post(url, {})// ,{headers})
-            .then(response => {
-                this.setCart(response.data)
-
-                this.updateCartDisplay()
-
-            })
-            .catch(error => {
-
-                const data = {
-                    error: "Add to cart failed."
-                };
-
-                templateBuilder.append("error", data, "errors")
-            })
-    }
-
-    setCart(data)
-    {
-        this.cart = {
-            items: [],
-            total: 0
-        }
-
-        this.cart.total = data.total;
-
-        for (const [key, value] of Object.entries(data.items)) {
-            this.cart.items.push(value);
-        }
-    }
-
-    loadCart()
-    {
-
+    fetchCart() {
         const url = `${config.baseUrl}/cart`;
-
-        axios.get(url)
-            .then(response => {
-                this.setCart(response.data)
-
-                this.updateCartDisplay()
-
+        return axios.get(url)
+            .then(res => {
+                const itemsObj = res.data.items || {};
+                this.cart.items = Object.values(itemsObj);
+                this.cart.total = res.data.total || 0;
+                this.updateCartBadge();
             })
-            .catch(error => {
-
-                const data = {
-                    error: "Load cart failed."
-                };
-
-                templateBuilder.append("error", data, "errors")
-            })
-
+            .catch(() => {
+                this.cart.items = [];
+                this.cart.total = 0;
+                this.updateCartBadge();
+            });
     }
 
-    loadCartPage() {
-        const main = document.getElementById("main")
+    addToCart(productId) {
+        axios.post(`${config.baseUrl}/cart/products/${productId}`)
+            .then(() => this.fetchCart().then(() => this.renderCartPage()))
+            .catch(() => templateBuilder.append("error", { error: "Add to cart failed." }, "errors"));
+    }
+
+    updateQuantity(productId, quantity) {
+        axios.put(`${config.baseUrl}/cart/products/${productId}`, { quantity })
+            .then(() => this.fetchCart().then(() => this.renderCartPage()))
+            .catch(() => templateBuilder.append("error", { error: "Update quantity failed." }, "errors"));
+    }
+
+    removeFromCart(productId) {
+        axios.delete(`${config.baseUrl}/cart/products/${productId}`)
+            .then(() => this.fetchCart().then(() => this.renderCartPage()))
+            .catch(() => templateBuilder.append("error", { error: "Remove item failed." }, "errors"));
+    }
+
+    clearCart() {
+        axios.delete(`${config.baseUrl}/cart`)
+            .then(() => this.fetchCart().then(() => this.renderCartPage()))
+            .catch(() => templateBuilder.append("error", { error: "Clear cart failed." }, "errors"));
+    }
+
+    updateCartBadge() {
+        const badge = document.getElementById("cart-items");
+        if (badge) badge.innerText = this.cart.items.length;
+    }
+
+    showCartPage() {
+        this.fetchCart().then(() => this.renderCartPage());
+    }
+
+    renderCartPage() {
+        const main = document.getElementById("main");
         main.innerHTML = "";
 
-        let div = document.createElement("div");
-        div.classList = "filter-box";
-        main.appendChild(div);
+        // Sidebar placeholder
 
-        const contentDiv = document.createElement("div")
-        contentDiv.id = "content";
-        contentDiv.classList.add("content-form");
 
-        const cartHeader = document.createElement("div")
-        cartHeader.classList.add("cart-header")
-
-        const h1 = document.createElement("h1")
-        h1.innerText = "Cart";
-        cartHeader.appendChild(h1);
-
-        const clearButton = document.createElement("button");
-        clearButton.classList.add("btn", "btn-danger")
-        clearButton.innerText = "Clear";
-        clearButton.addEventListener("click", () => this.clearCart());
-        cartHeader.appendChild(clearButton)
-
-        contentDiv.appendChild(cartHeader)
+        // Main cart container
+        const contentDiv = document.createElement("div");
+        contentDiv.className = "content-form"; // fills the right column naturally
+        contentDiv.style.gridColumn = "1 / -1";
         main.appendChild(contentDiv);
 
-        // Render cart items
-        this.cart.items.forEach(item => {
-            this.buildItem(item, contentDiv)
-        });
+        // Cart header
+        const cartHeader = document.createElement("div");
+        cartHeader.className = "cart-header";
+        const h1 = document.createElement("h1");
+        h1.innerText = "Shopping Cart";
+        const clearBtn = document.createElement("button");
+        clearBtn.className = "btn btn-danger";
+        clearBtn.innerText = "Clear Cart";
+        clearBtn.onclick = () => this.clearCart();
+        cartHeader.append(h1, clearBtn);
+        contentDiv.appendChild(cartHeader);
 
-        // ✅ Add checkout button dynamically
-        if (this.cart.items.length > 0) {
-            const checkoutDiv = document.createElement("div");
-            checkoutDiv.classList.add("cart-footer");
-            checkoutDiv.innerHTML = `<button id="checkoutBtn" class="btn btn-primary">Checkout</button>`;
-            contentDiv.appendChild(checkoutDiv);
+        if (this.cart.items.length === 0) {
+            contentDiv.innerHTML += "<p>Your cart is empty.</p>";
+            return;
         }
+
+        // Cart items
+        this.cart.items.forEach(item => contentDiv.appendChild(this.buildItem(item)));
+
+        // Cart footer
+        const footer = document.createElement("div");
+        footer.className = "cart-footer";
+        footer.style.display = "flex";
+        footer.style.justifyContent = "space-between";
+        footer.style.alignItems = "center";
+        footer.style.marginTop = "20px";
+        footer.innerHTML = `
+            <h3>Total: $${this.cart.total.toFixed(2)}</h3>
+             <button id="checkoutBtn" class="btn btn-primary">Checkout</button>
+
+        `;
+        contentDiv.appendChild(footer);
     }
 
+    buildItem(item) {
+        const outerDiv = document.createElement("div");
+        outerDiv.className = "cart-item";
 
-    buildItem(item, parent)
-    {
-        let outerDiv = document.createElement("div");
-        outerDiv.classList.add("cart-item");
+        outerDiv.style.display = "flex";
+        outerDiv.style.justifyContent = "space-between";
+        outerDiv.style.padding = "12px";
+        outerDiv.style.borderBottom = "1px solid #ccc";
 
-        let div = document.createElement("div");
-        outerDiv.appendChild(div);
-        let h4 = document.createElement("h4")
-        h4.innerText = item.product.name;
-        div.appendChild(h4);
+        // Image
+        const imgDiv = document.createElement("div");
+        imgDiv.style.flex = "0 0 100px";
+        const img = document.createElement("img");
+        img.src = `images/products/${item.product.imageUrl}`;
+        img.style.width = "100%";
+        img.style.cursor = "pointer";
+        img.addEventListener("click", () => showImageDetailForm(item.product.name, img.src));
+        imgDiv.appendChild(img);
+        outerDiv.appendChild(imgDiv);
 
-        let photoDiv = document.createElement("div");
-        photoDiv.classList.add("photo")
-        let img = document.createElement("img");
-        img.src = `images/products/${item.product.imageUrl}`
-        img.addEventListener("click", () => {
-            showImageDetailForm(item.product.name, img.src)
-        })
-        photoDiv.appendChild(img)
-        let priceH4 = document.createElement("h4");
-        priceH4.classList.add("price");
-        priceH4.innerText = `$${item.product.price}`;
-        photoDiv.appendChild(priceH4);
-        outerDiv.appendChild(photoDiv);
+        // Product info
+        const infoDiv = document.createElement("div");
+        infoDiv.style.flex = "1";
+        infoDiv.style.marginLeft = "12px";
+        const name = document.createElement("h4");
+        name.innerText = item.product.name;
+        name.style.margin = "0 0 4px 0";
+        const desc = document.createElement("p");
+        desc.innerText = item.product.description;
+        desc.style.margin = "0 0 4px 0";
+        desc.style.fontSize = "0.9rem";
+        desc.style.color = "#555";
+        const price = document.createElement("p");
+        price.innerText = `$${item.product.price}`;
+        price.style.fontWeight = "bold";
+        price.style.margin = "0";
+        infoDiv.append(name, desc, price);
+        outerDiv.appendChild(infoDiv);
 
-        let descriptionDiv = document.createElement("div");
-        descriptionDiv.innerText = item.product.description;
-        outerDiv.appendChild(descriptionDiv);
+        // Quantity + Remove
+        const actionDiv = document.createElement("div");
+        actionDiv.style.display = "flex";
+        actionDiv.style.alignItems = "center";
+        actionDiv.style.gap = "8px";
+        const qtyInput = document.createElement("input");
+        qtyInput.type = "number";
+        qtyInput.min = 1;
+        qtyInput.value = item.quantity;
+        qtyInput.style.width = "60px";
+        qtyInput.onblur = () => {
+            if (qtyInput.value != item.quantity) {
+                this.updateQuantity(item.product.productId, qtyInput.value);
+            }
+        };
+        const removeBtn = document.createElement("button");
+        removeBtn.className = "btn btn-outline-danger";
+        removeBtn.innerText = "🗑️";
+        removeBtn.onclick = () => this.removeFromCart(item.product.productId);
+        actionDiv.append(qtyInput, removeBtn);
+        outerDiv.appendChild(actionDiv);
 
-        let quantityDiv = document.createElement("div")
-        quantityDiv.innerText = `Quantity: ${item.quantity}`;
-        outerDiv.appendChild(quantityDiv)
-
-
-        parent.appendChild(outerDiv);
-    }
-
-    clearCart()
-    {
-
-        const url = `${config.baseUrl}/cart`;
-
-        axios.delete(url)
-             .then(response => {
-                 this.cart = {
-                     items: [],
-                     total: 0
-                 }
-
-                 this.cart.total = response.data.total;
-
-                 for (const [key, value] of Object.entries(response.data.items)) {
-                     this.cart.items.push(value);
-                 }
-
-                 this.updateCartDisplay()
-                 this.loadCartPage()
-
-             })
-             .catch(error => {
-
-                 const data = {
-                     error: "Empty cart failed."
-                 };
-
-                 templateBuilder.append("error", data, "errors")
-             })
-    }
-
-    updateCartDisplay()
-    {
-        try {
-            const itemCount = this.cart.items.length;
-            const cartControl = document.getElementById("cart-items")
-
-            cartControl.innerText = itemCount;
-        }
-        catch (e) {
-
-        }
+        return outerDiv;
     }
 }
 
 
-
-
-
-document.addEventListener('DOMContentLoaded', () => {
-    cartService = new ShoppingCartService();
-
-    if(userService.isLoggedIn())
-    {
-        cartService.loadCart();
-    }
-
-});

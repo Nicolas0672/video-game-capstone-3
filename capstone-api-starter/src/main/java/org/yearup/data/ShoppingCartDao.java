@@ -13,4 +13,5 @@ public interface ShoppingCartDao
     CartRows getProductFromCartById(int productId, int userId);
     void delete(int userId);
     void updateQuantity(int userId, int productId, int quantity);
+    void deleteProductFromCart(int userId, int productId);
 }

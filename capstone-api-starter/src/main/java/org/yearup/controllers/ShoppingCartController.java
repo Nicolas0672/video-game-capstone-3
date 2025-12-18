@@ -86,6 +86,20 @@ public class ShoppingCartController
         return ResponseEntity.noContent().build();
     }
 
+    @DeleteMapping("products/{productId}")
+    @Operation(summary = "Delete product from cart")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Product deleted from cart"),
+            @ApiResponse(responseCode = "404", description = "Product not found in cart to delete")
+    })
+    public ResponseEntity<Void> deleteProductFromCart(Principal principal, @PathVariable int productId){
+
+        int userId = getUserId(principal);
+        shoppingCartService.deleteProductFromCart(userId, productId);
+        return ResponseEntity.noContent().build();
+
+    }
+
     // Helper
     private int getUserId(Principal principal){
         String name = principal.getName();

@@ -68,14 +68,15 @@ function saveProfile()
 
 function showCart()
 {
-    cartService.loadCartPage();
+    cartService.showCartPage();
 }
+
 
 function clearCart()
 {
     cartService.clearCart();
-    cartService.loadCartPage();
 }
+
 
 function setCategory(control)
 {
@@ -124,5 +125,14 @@ function closeError(control)
 
 document.addEventListener('DOMContentLoaded', () => {
 
+    // initialize cart service ONCE
+    cartService = new ShoppingCartService();
+
+    // restore cart on refresh if logged in
+    if (userService.isLoggedIn()) {
+        cartService.fetchCart();
+    }
+
     loadHome();
 });
+
