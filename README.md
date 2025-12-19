@@ -125,9 +125,9 @@ public ResponseEntity<Map<String, String>> handleProductNotFound(ProductNotFound
 Profile updates and product management include custom validation:
 
 ```java
-if(profileDao.existsByEmail(profile.getEmail())){
-    throw new EmailAlreadyExitsException("Email already exists: " + profile.getEmail());
-} 
+ if(profileDao.existsByEmailAndIdNot(profile.getEmail(), userId)){
+        throw new EmailAlreadyExitsException("Email already exists: " + profile.getEmail());
+        }
 ```
 ✅ Prevents duplicate emails and enforces business rules.
 

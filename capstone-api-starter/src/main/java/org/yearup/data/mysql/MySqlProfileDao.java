@@ -144,13 +144,14 @@ public class MySqlProfileDao extends MySqlDaoBase implements ProfileDao
     }
 
     @Override
-    public boolean existsByEmail(String email) {
-        String query = "SELECT 1 FROM profiles WHERE email = ?";
+    public boolean existsByEmailAndIdNot(String email, int userId) {
+        String query = "SELECT 1 FROM profiles WHERE email = ? AND user_id != ?";
 
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query))
         {
             preparedStatement.setString(1, email);
+            preparedStatement.setInt(2, userId);
             try (ResultSet resultSet = preparedStatement.executeQuery()){
                 if(resultSet.next()){
                     return true;
