@@ -28,7 +28,7 @@ public class ProfileService {
     public Profile update(Profile profile, int userId){
         findByUserId(userId); // ensure profile exists
 
-        if(profileDao.existsByEmail(profile.getEmail())){
+        if(profileDao.existsByEmailAndIdNot(profile.getEmail(), userId)){
             throw new EmailAlreadyExitsException("Email already exists: " + profile.getEmail());
         }
 
