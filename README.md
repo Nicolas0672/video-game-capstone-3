@@ -1,7 +1,7 @@
 # 🛒 E-Commerce Backend (E2E Capstone Project)
 
 ## 🚀 Project Overview
-This is a **full-featured, end-to-end (E2E) e-commerce backend** built with **Spring Boot**.  
+This is a **full-featured, end-to-end (E2E) video game e-commerce backend** built with **Spring Boot**.  
 It supports users, profiles, shopping carts, products, categories, and checkout workflows.
 
 The backend demonstrates:
